@@ -24,6 +24,11 @@ filename = []
 for i in range(no_of_images):
     filename.append(input("Enter the %d image name along with path and extension: " % (i + 1)))
 
+
+import os
+print("CWD:", os.getcwd())
+print("Trying to load:", filename[i])
+
 images = []
 for i in range(no_of_images):
     images.append(cv2.imread(filename[i]))
