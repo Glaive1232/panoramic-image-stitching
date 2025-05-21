@@ -1,6 +1,8 @@
 from panorama import Panaroma
 import imutils
 import cv2
+import os
+import sys
 from skimage.metrics import structural_similarity as compare_ssim
 
 
@@ -17,6 +19,10 @@ def compute_ssim(imageA, imageB):
     return score
 
 
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 no_of_images = int(input("Enter the number of images you want to concatenate: "))
 print("Enter the image names with extension in order of left to right in the way you want to concatenate: ")
 
@@ -25,19 +31,20 @@ for i in range(no_of_images):
     filename.append(input("Enter the %d image name along with path and extension: " % (i + 1)))
 
 
-import os
-print("CWD:", os.getcwd())
-print("Trying to load:", filename[i])
 
 images = []
-for i in range(no_of_images):
-    images.append(cv2.imread(filename[i]))
 
-for i in range(no_of_images):
-    images[i] = imutils.resize(images[i], width=400)
+for fname in filename:
+    img_path = os.path.join(BASE_DIR, "inputs", fname)
+    print(f"[LOADING] {img_path}")
+    img = cv2.imread(img_path)
+    if img is None:
+        print(f"[ERROR] Could not load image: {img_path}")
+        sys.exit(1)
 
-for i in range(no_of_images):
-    images[i] = imutils.resize(images[i], height=400)
+    img = imutils.resize(img, width=400)
+    img = imutils.resize(img, height=400)
+    images.append(img)
 
 
 panorama = Panaroma()
