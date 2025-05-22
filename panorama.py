@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 
-
 class Panaroma:
     def image_stitch(self, images, lowe_ratio=0.75, max_Threshold=4.0, match_status=False):
         (imageB, imageA) = images
@@ -32,11 +31,13 @@ class Panaroma:
     def detect_feature_and_keypoints(self, image):
         descriptors = cv2.SIFT_create()
         (keypoints, features) = descriptors.detectAndCompute(image, None)
+        # we dont need directions
         keypoints = np.float32([i.pt for i in keypoints])
         return keypoints, features
 
 
     def get_all_possible_matches(self, featuresA, featuresB):
+        # computes via euclidean distance
         match_instance = cv2.DescriptorMatcher_create("BruteForce")
         All_Matches = match_instance.knnMatch(featuresA, featuresB, 2)
         return All_Matches
